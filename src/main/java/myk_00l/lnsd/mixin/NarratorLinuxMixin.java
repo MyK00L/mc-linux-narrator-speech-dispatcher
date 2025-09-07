@@ -176,7 +176,7 @@ public abstract class NarratorLinuxMixin {
     */
    @Overwrite(remap = false)
    public void say(String msg, boolean interrupt, float volume) {
-      LOGGER.info("Narrator say() called with: '{}', interrupt: {}, volume: {}, stack trace:\n{}", msg, interrupt, volume, Thread.currentThread().getStackTrace());
+      // LOGGER.info("Narrator say() called with: '{}', interrupt: {}, volume: {}, stack trace:\n{}", msg, interrupt, volume, Thread.currentThread().getStackTrace());
       
       // Ensure we have a working executor service
       final ExecutorService workingExecutor;
