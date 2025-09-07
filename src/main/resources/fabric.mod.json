@@ -1,0 +1,28 @@
+{
+	"schemaVersion": 1,
+	"id": "linux-narrator-speech-dispatcher",
+	"version": "0.1.0",
+	"name": "Linux Narrator Speech Dispatcher",
+	"description": "overwrite narrator on linux to use speech-dispatcher instead of flite",
+	"authors": [
+		"MyK_00L"
+	],
+	"contact": {
+		"homepage": "",
+		"sources": ""
+	},
+	"license": "MIT",
+	"icon": "assets/linux-narrator-speech-dispatcher/icon.png",
+	"environment": "*",
+	"entrypoints": {},
+	"mixins": [
+		"linux-narrator-speech-dispatcher.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.17.2",
+		"minecraft": "~1.21.8",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {}
+}
