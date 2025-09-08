@@ -16,7 +16,10 @@
 	"environment": "*",
 	"entrypoints": {},
 	"mixins": [
-		"linux-narrator-speech-dispatcher.mixins.json"
+		{
+			"config": "linux-narrator-speech-dispatcher.client.mixins.json",
+			"environment": "client"
+		}
 	],
 	"depends": {
 		"fabricloader": ">=0.17.2",
