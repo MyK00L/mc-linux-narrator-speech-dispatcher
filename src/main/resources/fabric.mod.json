@@ -8,12 +8,12 @@
 		"MyK_00L"
 	],
 	"contact": {
-		"homepage": "",
-		"sources": ""
+		"homepage": "https://github.com/MyK00L/mc-linux-narrator-speech-dispatcher",
+		"sources": "https://github.com/MyK00L/mc-linux-narrator-speech-dispatcher"
 	},
 	"license": "MIT",
 	"icon": "assets/linux-narrator-speech-dispatcher/icon.png",
-	"environment": "*",
+	"environment": "client",
 	"entrypoints": {},
 	"mixins": [
 		{
