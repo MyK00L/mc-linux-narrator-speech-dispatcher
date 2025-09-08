@@ -10,19 +10,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import com.mojang.text2speech.NarratorLinux;
-import com.mojang.text2speech.Narrator;
 import com.sun.jna.Pointer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 
 @Mixin(value = NarratorLinux.class, remap = false)
 public abstract class NarratorLinuxMixin {
@@ -31,60 +26,32 @@ public abstract class NarratorLinuxMixin {
 	@Mutable @Shadow @Final
 	private ExecutorService executor;
 
-	// Speech-dispatcher process reference for interruption
-	private Process currentSpeechProcess = null;
-
-	private static final String MOD_ID = "linux-narrator-speech-dispatcher";
-	private static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-
-	private void stopCurrentSpeech() {
-		if(currentSpeechProcess!=null && currentSpeechProcess.isAlive()) {
-			currentSpeechProcess = null;
-			List<String> command = new ArrayList<>();
-			command.add("spd-say");
-			command.add("-N");
-			command.add("minecraft-narrator");
-			command.add("-C");
-			try {
-				ProcessBuilder pb = new ProcessBuilder(command);
-				pb.start();
-			} catch (Exception e) {
-				LOGGER.warn("exception: {}", e); 
-			}
-		}
-	}
+	// private static final String MOD_ID = "linux-narrator-speech-dispatcher";
+	// private static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	/** overwrite function @reason because @author me */
 	@Overwrite(remap = false)
 	public void say(String msg, boolean interrupt, float volume) {
-		if (interrupt) {
-			this.clear();
-		}
+		// unnecessary as speech-dispatcher automatically cancels on new dialogue
+		//if(interrupt) {
+		//	ProcessBuilder pb = new ProcessBuilder("spd-say", "-N", "minecraft-narrator", "-C");
+		//	pb.start();
+		//}
 		try {
-			List<String> command = new ArrayList<>();
-			command.add("spd-say");
-			command.add("-N");
-			command.add("minecraft-narrator");
-			command.add("-w");
-			int spdVolume = Math.round((volume * 200) - 100);
-			command.add("-i");
-			command.add(String.valueOf(spdVolume));
-			command.add(msg);
-			ProcessBuilder pb = new ProcessBuilder(command);
-			currentSpeechProcess = pb.start();
+			String vol = String.valueOf(Math.round((volume * 200) - 100));
+			ProcessBuilder pb = new ProcessBuilder("spd-say", "-N", "minecraft-narrator", "-i", vol, msg);
+			pb.start();
 		} catch (Exception e) {
-			LOGGER.error("Failed to execute spd-say command. Is speech-dispatcher installed?", e);
+			// LOGGER.error("Failed to execute spd-say command. Is speech-dispatcher installed?", e);
 		}
 	}
 	/** overwrite function @reason because @author me */
 	@Overwrite(remap = false)
 	public void clear() {
-		stopCurrentSpeech();
 	}
 	/** overwrite function @reason because @author me */
 	@Overwrite(remap = false)
 	public void destroy() {
-		stopCurrentSpeech();
 	}
 
 	// disable loading native libs
@@ -107,7 +74,7 @@ public abstract class NarratorLinuxMixin {
 		this.executor.shutdownNow();
 		this.executor = null;
 		this.executionBatch = null;
-		LOGGER.info("NarratorLinux initialized successfully without flite dependencies");
+		// LOGGER.info("NarratorLinux initialized successfully without flite dependencies");
 	}
 }
 
