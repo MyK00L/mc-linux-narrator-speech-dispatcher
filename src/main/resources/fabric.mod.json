@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "linux-narrator-speech-dispatcher",
-	"version": "0.1.0",
+	"version": "${version}",
 	"name": "Linux Narrator Speech Dispatcher",
 	"description": "overwrite narrator on linux to use speech-dispatcher instead of flite",
 	"authors": [
