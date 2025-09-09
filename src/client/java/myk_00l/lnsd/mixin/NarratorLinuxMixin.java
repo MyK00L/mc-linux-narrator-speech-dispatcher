@@ -15,6 +15,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import com.mojang.text2speech.NarratorLinux;
 import com.sun.jna.Pointer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.language.LanguageManager;
 
 // import org.slf4j.Logger;
 // import org.slf4j.LoggerFactory;
@@ -34,12 +36,12 @@ public abstract class NarratorLinuxMixin {
 	public void say(String msg, boolean interrupt, float volume) {
 		// unnecessary as speech-dispatcher automatically cancels on new dialogue
 		//if(interrupt) {
-		//	ProcessBuilder pb = new ProcessBuilder("spd-say", "-N", "minecraft-narrator", "-C");
-		//	pb.start();
+		// TODO: add -S flag
 		//}
+		String lang = Minecraft.getInstance().getLanguageManager().getSelected().replace('_','-');
+		String vol = String.valueOf(Math.round((volume * 200) - 100));
+		ProcessBuilder pb = new ProcessBuilder("spd-say", "-N", "minecraft-narrator", "-i", vol, "-l", lang, msg);
 		try {
-			String vol = String.valueOf(Math.round((volume * 200) - 100));
-			ProcessBuilder pb = new ProcessBuilder("spd-say", "-N", "minecraft-narrator", "-i", vol, msg);
 			pb.start();
 		} catch (Exception e) {
 			// LOGGER.error("Failed to execute spd-say command. Is speech-dispatcher installed?", e);
@@ -48,10 +50,15 @@ public abstract class NarratorLinuxMixin {
 	/** overwrite function @reason because @author me */
 	@Overwrite(remap = false)
 	public void clear() {
+		ProcessBuilder pb = new ProcessBuilder("spd-say", "-N", "minecraft-narrator", "-C");
+		try {
+			pb.start();
+		} catch (Exception e) {}
 	}
 	/** overwrite function @reason because @author me */
 	@Overwrite(remap = false)
 	public void destroy() {
+		clear();
 	}
 
 	// disable loading native libs
